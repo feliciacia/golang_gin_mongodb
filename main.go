@@ -1,14 +1,14 @@
 package main
 
 import (
-	routes "golang_gin_mongodb/routes"
 	"os"
 
+	"github.com/feliciacia/golang_gin_mongodb/golang_gin_mongodb/routes"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	port = os.Getenv("PORT")
+	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
 	}
@@ -24,4 +24,5 @@ func main() {
 	router.GET("/api-2", func(c *gin.Context) {
 		c.JSON(200, gin.H{"success": "Access granted for api-2"})
 	})
+	router.Run(":" + port)
 }
