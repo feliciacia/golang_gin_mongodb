@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -17,10 +16,8 @@ func DBinstance() *mongo.Client {
 	if err != nil {
 		log.Fatal(("Error loading.env file"))
 	}
-	mongoDb := os.Getenv("MONGODB_URL")
 
-	mongo.NewClient(options.Client().ApplyURI((mongoDb)))
-	client, err := mongo.NewClient()
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://admin:admin@127.0.0.1:27017/"))
 
 	if err != nil {
 		log.Fatal(err)
@@ -28,7 +25,7 @@ func DBinstance() *mongo.Client {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	client.Connect(ctx)
+	err = client.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,6 +36,6 @@ func DBinstance() *mongo.Client {
 var Client *mongo.Client = DBinstance()
 
 func OpenCollection(client *mongo.Client, collectionName string) *mongo.Collection {
-	var collection *mongo.Collection = client.Database("").Collection(collectionName)
+	var collection *mongo.Collection = client.Database("cluster0").Collection(collectionName)
 	return collection
 }
